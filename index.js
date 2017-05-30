@@ -34,7 +34,12 @@ app.use(session({// session 中间件
   })
 }));
 
-app.use(flash())// flash 中间件，用来显示通知。flash 中间件应该放到 session 中间件之后加载，因为 flash 是基于 session 的。
+app.use(flash());// flash 中间件，用来显示通知。flash 中间件应该放到 session 中间件之后加载，因为 flash 是基于 session 的。
+
+app.use(require('express-formidable')({//使用 express-formidable 处理 form 表单（包括文件上传）
+  uploadDir:path.join(__dirname,'public/img'),// 上传文件目录
+  keepExtensions:true//// 保留后缀
+}));
 
 app.locals.blog={// 在app.locals中设置模板全局常量
   title:pkg.name,
@@ -45,6 +50,7 @@ app.use(function (req,res,next) {// 在res.locals中添加模板必需的三个�
   res.locals.user=req.session.user;
   res.locals.success=req.flash('success').toString();
   res.locals.error=req.flash('error').toString();
+  next();
 })
 
 
